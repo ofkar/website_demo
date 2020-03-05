@@ -23,6 +23,7 @@ import pdb
 #s3 = boto3.resource('s3')
 
 app = Flask(__name__)
+app.config["TEMPLATES_AUTO_RELOAD"] = True
 #app = Flask(__name__, static_url_path='', static_folder="/")
 app.config['CORS_HEADERS'] = 'Content-Type'
 app.config['UPLOADED_PHOTOS_DEST'] = '/workspace/demo-code/code/uploaded_photos/'
