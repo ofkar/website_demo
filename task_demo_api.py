@@ -25,10 +25,10 @@ import pdb
 app = Flask(__name__)
 #app = Flask(__name__, static_url_path='', static_folder="/")
 app.config['CORS_HEADERS'] = 'Content-Type'
-app.config['UPLOADED_PHOTOS_DEST'] = '/demo-code/code/uploaded_photos/'
-app.config['INPUT_PHOTOS_DEST'] = '/demo-code/code/other/demo_images'
-app.config['PROCESSED_PHOTOS_DEST'] = '/demo-code/code/other/task-demo-results'
-app.config['PROCESSING_SCRIPT_LOCATION'] = '/demo-code/code/scaling/demo.py'
+app.config['UPLOADED_PHOTOS_DEST'] = '/demo-code/uploaded_photos/'
+app.config['INPUT_PHOTOS_DEST'] = '/demo-code/other/demo_images'
+app.config['PROCESSED_PHOTOS_DEST'] = '/demo-code/other/task-demo-results'
+app.config['PROCESSING_SCRIPT_LOCATION'] = '/demo-code/scaling/demo.py'
 PROCESSOR_SERVER = 'localhost' #'taskonomy-task-demo-797030650.us-west-2.elb.amazonaws.com'
 #PROCESSOR_SERVER = 'taskonomy-task-demo-797030650.us-west-2.elb.amazonaws.com'
 VALID_UPLOADTOKEN_PREFIX = "aa"
@@ -148,7 +148,7 @@ def process_input_file(src, unique_dir, fpath, filename, task, uploadToken):
     cleaned_task = clean_task_name(task)
     # # cmd = "sudo cp " + os.path.join(fpath, filename) + " " + os.path.join(fpath, task + ext)
 
-    tmpdir = '/demo-code/code/uploaded_photos/' + unique_dir
+    tmpdir = '/demo-code/uploaded_photos/' + unique_dir
     call("mkdir " + tmpdir, shell=True)
     call("mkdir " + fpath, shell=True)
 
@@ -184,7 +184,7 @@ def process_input_file(src, unique_dir, fpath, filename, task, uploadToken):
 
     cmd_cplocal = "cp {} {}".format(
     os.path.join(fpath, cleaned_task + ext),
-    "/demo-page/website_demo/static/task-demo-results/" + uploadToken
+    "/demo-page/static/task-demo-results/" + uploadToken
     + "__" + display_name_to_task[task] + ".png")
 
     call(cmd_cplocal, shell=True)
