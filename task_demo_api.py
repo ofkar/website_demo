@@ -190,6 +190,13 @@ def process_input_file(src, unique_dir, fpath, filename, task, uploadToken):
 
     call(cmd_cplocal, shell=True)
 
+    cmd_cplocal2 = "cp {} {}".format(
+    os.path.join(fpath, cleaned_task + ext),
+    "/website/static/task-demo-results/" + uploadToken
+    + "__" + display_name_to_task[task] + ".png")
+
+    call(cmd_cplocal2, shell=True)
+
     # # /home/ubuntu/anaconda3/bin/python /home/ubuntu/task-taxonomy-331b/tools/run_img_task.py --task reshade --img /home/ubuntu/s3/demo_images/92ba9602b8339d47df10be880c1d773a8e6b74465eb6a0bc5e7ec9391574aa64/download.png --store /home/ubuntu/s3/demo_images/92ba9602b8339d47df10be880c1d773a8e6b74465eb6a0bc5e7ec9391574aa64/2D_Edges.png
 
     # # call(cmd, shell=True)
@@ -240,7 +247,8 @@ def validate_captcha(request):
 def home():
     return render_template("index.html")
 
-@app.route('/runmodels', methods=['GET', 'POST'])
+#@app.route('/runmodels', methods=['GET', 'POST'])
+@app.route('/demopage/runmodels', methods=['GET', 'POST'])
 def upload():
     try:
         if request.method == 'POST' and 'photo' in request.files:
@@ -336,7 +344,8 @@ def send_js(path):
     print(path)
     return send_from_directory(app.config['PROCESSED_PHOTOS_DEST'] , path)
 
-@app.route('/ping', methods=['GET'])
+#@app.route('/ping', methods=['GET'])
+@app.route('/demopage/ping', methods=['GET'])
 def ping():
     return "OK", 200, {'content-length':'2'}
 
