@@ -50,15 +50,28 @@ map_to_display_names = {
     'rgb2sfnorm': 'Normals',
     'reshade': 'Reshading',
     'rgb2depth': 'Z-Depth',
+    'rgb2sfnormb': 'Normals_Baseline',
+    'reshadeb': 'Reshading_Baseline',
+    'rgb2depthb': 'Z-Depth_Baseline',
+    'curvature_consistency' : 'Curvature_Consistency',
+    'edge2d_consistency' : 'Edge2D_Consistency',
+    'edge3d_consistency' : 'Edge3D_Consistency',
+    'keypoint2d_consistency': 'Keypoint2D_Consistency',
+    'keypoint3d_consistency' : 'Keypoint3D_Consistency',
+    'curvature_baseline' : 'Curvature_Baseline',
+    'edge2d_baseline' : 'Edge2D_Baseline',
+    'edge3d_baseline' : 'Edge3D_Baseline',
+    'keypoint2d_baseline': 'Keypoint2D_Baseline',
+    'keypoint3d_baseline' : 'Keypoint3D_Baseline',
 }
 
+percep_tasks = ['curvature', 'edge2d', 'edge3d', 'keypoint2d', 'keypoint3d']
+
 display_name_to_task = {v: k for k, v in map_to_display_names.items()}
-list_of_tasks = 'rgb2sfnorm reshade rgb2depth'
+list_of_tasks = 'rgb2sfnorm reshade rgb2depth rgb2sfnormb reshadeb rgb2depthb'
 list_of_tasks = list_of_tasks.split()
 
 ports = [ 8080 + i for i in range(len(list_of_tasks))]
-task_to_port = {task: port for task, port in zip(list_of_tasks, ports)}
-print(task_to_port)
 
 def touch(fname, times=None):
     with open(fname, 'a'):
@@ -197,6 +210,28 @@ def process_input_file(src, unique_dir, fpath, filename, task, uploadToken):
 
     call(cmd_cplocal2, shell=True)
 
+    print("Current task is", task)
+    if task is 'Normals': #save perceps
+        for i in range(len(percep_tasks)):
+            call("cp -r {} {} && cp -r {} {}".format(
+             os.path.join(tmpdir, percep_tasks[i] + '_consistency' + ext),
+             "/demo-page/static/task-demo-results/" + uploadToken + '__' + percep_tasks[i] + '_consistency' + ext,
+             os.path.join(tmpdir, percep_tasks[i] + '_consistency' + ext),
+             "/website/static/task-demo-results/" + uploadToken + '__' + percep_tasks[i] + '_consistency' + ext,
+
+             ), shell=True)
+
+    if task is 'Normals_Baseline': #save perceps
+        for i in range(len(percep_tasks)):
+            call("cp -r {} {} && cp -r {} {}".format(
+             os.path.join(tmpdir, percep_tasks[i] + '_baseline' + ext),
+             "/demo-page/static/task-demo-results/" + uploadToken + '__' + percep_tasks[i] + '_baseline' + ext,
+             os.path.join(tmpdir, percep_tasks[i] + '_baseline' + ext),
+             "/website/static/task-demo-results/" + uploadToken + '__' + percep_tasks[i] + '_baseline' + ext,
+             ), shell=True)
+
+
+
     # # /home/ubuntu/anaconda3/bin/python /home/ubuntu/task-taxonomy-331b/tools/run_img_task.py --task reshade --img /home/ubuntu/s3/demo_images/92ba9602b8339d47df10be880c1d773a8e6b74465eb6a0bc5e7ec9391574aa64/download.png --store /home/ubuntu/s3/demo_images/92ba9602b8339d47df10be880c1d773a8e6b74465eb6a0bc5e7ec9391574aa64/2D_Edges.png
 
     # # call(cmd, shell=True)
@@ -219,7 +254,10 @@ def secureFileName(uploadToken, ext):
 sortOrder = [
         'rgb2sfnorm',
         'reshade',
-        'rgb2depth'
+        'rgb2depth',
+        'rgb2sfnormb',
+        'reshadeb',
+        'rgb2depthb'
         ];
 
 TARGET_TASKS = [map_to_display_names[t] for t in sortOrder]
@@ -274,17 +312,17 @@ def upload():
             #### HERE #####
             fix_orientation(os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename))
 
-            cmd = "sudo convert {} {} && rm {}".format(
-                    os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename),
-                    os.path.join(app.config['INPUT_PHOTOS_DEST'], rawFileName),
-                    os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)),
+            #cmd = "sudo convert {} {} && rm {}".format(
+            #        os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename),
+            #        os.path.join(app.config['INPUT_PHOTOS_DEST'], rawFileName),
+            #        os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename)),
 
             #cmd = "sudo convert {} {}".format(
             #        os.path.join(app.config['UPLOADED_PHOTOS_DEST'], filename),
             #        os.path.join(app.config['INPUT_PHOTOS_DEST'], rawFileName)),
 
-            print(cmd)
-            call(cmd, shell=True)
+            #print(cmd)
+            #call(cmd, shell=True)
 
             #pdb.set_trace()
             for task in TARGET_TASKS:
