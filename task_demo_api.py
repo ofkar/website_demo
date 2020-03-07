@@ -221,6 +221,11 @@ def process_input_file(src, unique_dir, fpath, filename, task, uploadToken):
 
              ), shell=True)
 
+            call("rm {}".format(
+             os.path.join(tmpdir, percep_tasks[i] + '_consistency' + ext),
+             ), shell=True)
+
+
     if task is 'Normals_Baseline': #save perceps
         for i in range(len(percep_tasks)):
             call("cp -r {} {} && cp -r {} {}".format(
@@ -230,6 +235,9 @@ def process_input_file(src, unique_dir, fpath, filename, task, uploadToken):
              "/website/static/task-demo-results/" + uploadToken + '__' + percep_tasks[i] + '_baseline' + ext,
              ), shell=True)
 
+            call("rm {}".format(
+             os.path.join(tmpdir, percep_tasks[i] + '_baseline' + ext),
+             ), shell=True)
 
 
     # # /home/ubuntu/anaconda3/bin/python /home/ubuntu/task-taxonomy-331b/tools/run_img_task.py --task reshade --img /home/ubuntu/s3/demo_images/92ba9602b8339d47df10be880c1d773a8e6b74465eb6a0bc5e7ec9391574aa64/download.png --store /home/ubuntu/s3/demo_images/92ba9602b8339d47df10be880c1d773a8e6b74465eb6a0bc5e7ec9391574aa64/2D_Edges.png
